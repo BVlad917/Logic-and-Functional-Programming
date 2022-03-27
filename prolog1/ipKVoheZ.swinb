@@ -1,0 +1,219 @@
+<div class="notebook">
+
+<div class="nb-cell markdown" name="md1">
+## P1
+</div>
+
+<div class="nb-cell markdown" name="md2">
+#### 4 
+#### a. Write a predicate to determine the difference of two sets.
+</div>
+
+<div class="nb-cell markdown" name="md3">
+To determine the difference between 2 sets, we will first check that a given list is a set. To do that, we will first need a function which counts the number of occurences of a given element in a list.
+</div>
+
+<div class="nb-cell html" name="htm1">
+<p></p><pre> nrOcc(l<sub>1</sub>, l<sub>2</sub>, ..., l<sub>n</sub>, e) = { 0, n = 0 <p></p>
+<p>             	 	    { 1 + nrOcc(l<sub>2</sub>, ..., l<sub>n</sub>, e), l<sub>1</sub> = e </p>
+<p>                            { nrOcc(l<sub>2</sub>, ..., l<sub>n</sub>, e), otherwise </p></pre>
+</div>
+
+<div class="nb-cell program" name="p1">
+nrOcc([], _, 0).
+
+nrOcc([H|T], E, C):-
+    H =:= E,
+    nrOcc(T, E, C2),
+    C is C2 + 1.
+
+nrOcc([H|T], E, C):-
+    H =\= E,
+    nrOcc(T, E, C).
+</div>
+
+<div class="nb-cell query" name="q1">
+nrOcc([1, 2, 3, 4, 2, 9, 2, 10], 2, R).
+</div>
+
+<div class="nb-cell query" name="q2">
+nrOcc([1, 2, 3, 4, 2, 9, 2, 10], 17, R).
+</div>
+
+<div class="nb-cell query" name="q3">
+nrOcc([], 2, R).
+</div>
+
+<div class="nb-cell html" name="htm2">
+We need to determine if a given list is a set.
+</div>
+
+<div class="nb-cell html" name="htm3">
+<p></p><pre> isSet(l<sub>1</sub>, ..., l<sub>n</sub>, p<sub>1</sub>, ..., p<sub>n</sub>) = { true, n = 0 <p></p>
+<p>             	 	          { false, nrOcc(p<sub>1</sub>, ..., p<sub>n</sub>, l<sub>1</sub>) &gt; 1 </p>
+<p>                                  { isSet(l<sub>2</sub>, ..., l<sub>n</sub>, p<sub>1</sub>, ..., p<sub>n</sub>), otherwise </p></pre>
+</div>
+
+<div class="nb-cell program" name="p2">
+% Below the code for the number of occurences is copied
+
+nrOcc([], _, 0).
+
+nrOcc([H|T], E, C):-
+    H =:= E,
+    nrOcc(T, E, C2),
+    C is C2 + 1.
+
+nrOcc([H|T], E, C):-
+    H =\= E,
+    nrOcc(T, E, C).
+
+
+
+% Below is what is actually new, the code which checks if a list is a set
+
+isSet([], _).
+
+isSet([H|T], P):-
+    nrOcc(P, H, 1),
+    isSet(T, P).
+
+isSetMain(L):-
+    isSet(L, L).
+</div>
+
+<div class="nb-cell query" name="q4">
+isSetMain([1, 2, 3, 4, 5]).
+</div>
+
+<div class="nb-cell query" name="q6">
+isSetMain([1, 2, 3, 4, 2, 5, 7]).
+</div>
+
+<div class="nb-cell query" name="q5">
+isSetMain([])
+</div>
+
+<div class="nb-cell markdown" name="md4">
+Now we can find the difference between 2 sets.
+</div>
+
+<div class="nb-cell html" name="htm4">
+<p></p><pre> diff(l<sub>1</sub>, ..., l<sub>n</sub>, p<sub>1</sub>, ..., p<sub>m</sub>) = { ∅, n = 0 <p></p>
+<p>             	 	         { l<sub>1</sub> ∪ diff(l<sub>2</sub>, ..., l<sub>n</sub>, p<sub>1</sub>, ..., p<sub>m</sub>), nrOcc(p<sub>1</sub>, ..., p<sub>m</sub>, l<sub>1</sub>) = 0   </p>
+<p>                                 { diff(l<sub>2</sub>, ..., l<sub>n</sub>, p<sub>1</sub>, ..., p<sub>m</sub>), otherwise </p></pre>
+</div>
+
+<div class="nb-cell program" name="p3">
+% Below we will copy the previous code
+
+nrOcc([], _, 0).
+
+nrOcc([H|T], E, C):-
+    H =:= E,
+    nrOcc(T, E, C2),
+    C is C2 + 1.
+
+nrOcc([H|T], E, C):-
+    H =\= E,
+    nrOcc(T, E, C).
+
+isSet([], _).
+
+isSet([H|T], P):-
+    nrOcc(P, H, 1),
+    isSet(T, P).
+
+isSetMain(L):-
+    isSet(L, L).
+
+
+
+% Below is the new code
+
+diff([], _, []).
+
+diff([H|T], P, [H|R]):-
+    nrOcc(P, H, 0),
+    diff(T, P, R).
+
+diff([H|T], P, R):-
+    nrOcc(P, H, C),
+    C&gt;0,
+    diff(T, P, R).
+
+diffMain(S1, S2, R):-
+    isSetMain(S1),
+    isSetMain(S2),
+    diff(S1, S2, R).
+</div>
+
+<div class="nb-cell query" name="q7">
+diffMain([1, 2, 3, 4], [2, 3], R).
+</div>
+
+<div class="nb-cell query" name="q8">
+diffMain([1, 2, 3, 4], [1, 2, 3, 4], R).
+</div>
+
+<div class="nb-cell query" name="q9">
+diffMain([1, 2, 3, 4], [], R).
+</div>
+
+<div class="nb-cell query" name="q10">
+diffMain([], [2, 3], R).
+</div>
+
+<div class="nb-cell query" name="q11">
+diffMain([], [], R).
+</div>
+
+<div class="nb-cell query" name="q12">
+diffMain([1, 2, 3, 2, 4], [2, 3], R).
+</div>
+
+<div class="nb-cell query" name="q13">
+diffMain([1, 2, 3, 4], [2, 3, 2], R).
+</div>
+
+<div class="nb-cell markdown" name="md5">
+#### b. Write a predicate to add value 1 after every even element from a list
+</div>
+
+<div class="nb-cell html" name="htm5">
+<p></p><pre> addOne(l<sub>1</sub>, l<sub>2</sub>, ..., l<sub>n</sub>) = { ∅, n = 0 <p></p>
+<p>             	 	  { l<sub>1</sub> ∪ {1} ∪ addOne(l<sub>2</sub>, ..., l<sub>n</sub>), l<sub>1</sub> % 2 = 0   </p>
+<p>                          { l<sub>1</sub> ∪ addOne(l<sub>2</sub>, ..., l<sub>n</sub>), otherwise </p></pre>
+</div>
+
+<div class="nb-cell program" name="p4">
+addOne([], []).
+
+addOne([H|T], [H,1|R]):-
+    H2 is H mod 2,
+    H2 =:= 0,
+    addOne(T, R).
+
+addOne([H|T], [H|R]):-
+    H2 is H mod 2,
+    H2 =:= 1,
+    addOne(T, R).
+</div>
+
+<div class="nb-cell query" name="q14">
+addOne([1, 2, 3, 4, 5], R).
+</div>
+
+<div class="nb-cell query" name="q15">
+addOne([1, 3, 5, 9], R).
+</div>
+
+<div class="nb-cell query" name="q16">
+addOne([2, 4, 6, 8], R).
+</div>
+
+<div class="nb-cell query" name="q17">
+addOne([], R).
+</div>
+
+</div>

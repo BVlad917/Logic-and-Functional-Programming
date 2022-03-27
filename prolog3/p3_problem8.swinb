@@ -1,0 +1,86 @@
+<div class="notebook">
+
+<div class="nb-cell markdown" name="md1">
+### P3
+</div>
+
+<div class="nb-cell html" name="htm1">
+8.<p> Generate all strings of n parentheses correctly closed. </p>
+<p> E.g.: n=4 =&gt; (()) and () () </p>
+</div>
+
+<div class="nb-cell html" name="htm4">
+<p> n parentheses correctly closed =&gt; n/2 open parentheses and n/2 closed parentheses (n must be an even number) </p>
+<p> IDEA: Start with an empty string (works as a collector variable)  </p>
+<p> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &gt;&gt;&gt; We can add an open parenthesis '(' to the resulting string only if the count of open parentheses added so far is less than n/2 </p>
+<p> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &gt;&gt;&gt; We can add a closed parenthesis ')' to the resulting string only if the count of closed parentheses added so far is less than the count of open parentheses '(' added so far </p>
+</div>
+
+<div class="nb-cell html" name="htm3">
+<p></p><pre>parentheses(n, opened, closed, string) = { string, if opened = n AND closed = n 
+				         { parantheses(n, opened + 1, closed, string+'(' ), if opened &lt; n
+                         	         { parantheses(n, opened, closed + 1, string+')' ), if closed &lt; opened
+<p></p></pre>
+</div>
+
+<div class="nb-cell html" name="htm5">
+<p></p><pre> 
+parenthesesMain(n) = { parentheses(n / 2, 0, 0, ""), if n % 2 = 0 AND n is not negative
+<p></p></pre>
+</div>
+
+<div class="nb-cell program" name="p1">
+parentheses(N, O, C, S, S):-
+    O =:= N,
+    C =:= N,
+    !.
+
+parentheses(N, O, C, S, R):-
+    O &lt; N,
+    O1 is O + 1,
+    string_concat(S, "(", S2),
+    parentheses(N, O1, C, S2, R).
+
+parentheses(N, O, C, S, R):-
+    C &lt; O,
+    C1 is C + 1,
+    string_concat(S, ")", S2),
+    parentheses(N, O, C1, S2, R).
+
+parenthesesMain(N, Bag):-
+    N &gt;= 0,
+    NMod2 is N mod 2,
+    NMod2 =:= 0,
+    NDiv2 is N / 2,
+    findall(R, parentheses(NDiv2, 0, 0, "", R), Bag).
+</div>
+
+<div class="nb-cell query" name="q1">
+parenthesesMain(4, Bag).
+</div>
+
+<div class="nb-cell query" name="q2">
+parenthesesMain(6, Bag).
+</div>
+
+<div class="nb-cell query" name="q3">
+parenthesesMain(8, Bag).
+</div>
+
+<div class="nb-cell query" name="q4">
+parenthesesMain(0, Bag).
+</div>
+
+<div class="nb-cell query" name="q5">
+parenthesesMain(3, Bag).
+</div>
+
+<div class="nb-cell query" name="q6">
+parenthesesMain(-2, Bag).
+</div>
+
+<div class="nb-cell html" name="htm2">
+<p> </p><p></p>
+</div>
+
+</div>

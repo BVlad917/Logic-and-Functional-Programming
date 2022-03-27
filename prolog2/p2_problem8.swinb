@@ -1,0 +1,275 @@
+<div class="notebook">
+
+<div class="nb-cell markdown" name="md1">
+### P2
+</div>
+
+<div class="nb-cell html" name="htm1">
+8<p> a. Determine the successor of a number represented as digits in a list. </p>
+<p> Eg.: [1 9 3 5 9 9] --&gt; [1 9 3 6 0 0] </p>
+</div>
+
+<div class="nb-cell html" name="htm2">
+<p> We will break the problem into 3 steps: </p>
+<ol>
+  <li>Turn the list into a number</li>
+  <li>Increase the number by 1</li>
+  <li>Turn the number back into a list</li>
+</ol>
+</div>
+
+<div class="nb-cell html" name="htm3">
+<p> 1. Turn the list into a number </p>
+</div>
+
+<div class="nb-cell html" name="htm4">
+<p></p><pre> listToNumber(l<sub>1</sub>, l<sub>2</sub>, ..., l<sub>n</sub>, Col) = { Col, n = 0 <p></p>
+<p> 			           = { listToNumber(l<sub>2</sub>, ..., l<sub>n</sub>, Col * 10 + l<sub>1</sub>), otherwise </p></pre>
+</div>
+
+<div class="nb-cell html" name="htm8">
+<p></p><pre> listToNumberMain(L: List, R: Number) <p></p>
+<p> flow model: listToNumberMain(i, o); listToNumberMain(i, i) </p></pre>
+</div>
+
+<div class="nb-cell program" name="p1">
+listToNumber([], Col, Col).
+
+listToNumber([H|T], Col, R):-
+    H &lt; 10,		% Each element of the list must be a digit
+    Col2 is Col * 10 + H,
+    listToNumber(T, Col2, R).
+
+listToNumberMain([H|T], R):-  % Split the list s.t. we get 'fail' for empty list
+    listToNumber([H|T], 0, R).
+</div>
+
+<div class="nb-cell query" name="q1">
+listToNumberMain([1, 2, 3], R).
+</div>
+
+<div class="nb-cell query" name="q3">
+listToNumberMain([1, 2, 0], R).
+</div>
+
+<div class="nb-cell query" name="q2">
+listToNumberMain([], R).
+</div>
+
+<div class="nb-cell query" name="q4">
+listToNumberMain([1, 2, 13, 4], R).
+</div>
+
+<div class="nb-cell query" name="q5">
+listToNumberMain([1, 2, 3], 123).
+</div>
+
+<div class="nb-cell html" name="htm5">
+<p> 2. Increase number (by 1) - trivial </p>
+</div>
+
+<div class="nb-cell html" name="htm6">
+<p> 3. Turn the number into a list of digits </p>
+</div>
+
+<div class="nb-cell html" name="htm7">
+<p></p><pre> numberToList(N, Col) = { Col, N = 0 <p></p>
+<p>	                { numberToList(N div 10, {N mod 10} ∪ Col), otherwise </p></pre>
+</div>
+
+<div class="nb-cell html" name="htm9">
+<p></p><pre> numberToListMain(N: Number, R: List) <p></p>
+<p> flow model: numberToListMain(i, o), numberToListMain(i, i) </p></pre>
+</div>
+
+<div class="nb-cell program" name="p2">
+numberToList(0, Col, Col):-
+    !.
+
+numberToList(N, Col, R):-
+    NDiv10 is N div 10,
+    NMod10 is N mod 10,
+    numberToList(NDiv10, [NMod10|Col], R).
+
+numberToListMain(0, [0]):- % If 0 is given, wee need to return [0], not []
+	!.
+    
+numberToListMain(N, R):-
+    numberToList(N, [], R).
+</div>
+
+<div class="nb-cell query" name="q6">
+numberToListMain(123, R).
+</div>
+
+<div class="nb-cell query" name="q7">
+numberToListMain(120, R).
+</div>
+
+<div class="nb-cell query" name="q8">
+numberToListMain(0, R).
+</div>
+
+<div class="nb-cell query" name="q15">
+numberToListMain(123, [1, 2, 3]).
+</div>
+
+<div class="nb-cell html" name="htm10">
+<p></p><pre> successor(L) = { numberToListMain(listToNumberMain(L) + 1) <p></p></pre>
+</div>
+
+<div class="nb-cell html" name="htm11">
+<p></p><pre> successor(L: List, R: List) <p></p>
+<p> flow model: successor(i, o); successor(i, i) </p></pre>
+</div>
+
+<div class="nb-cell program" name="p3">
+% Previous code
+
+listToNumber([], Col, Col).
+
+listToNumber([H|T], Col, R):-
+    H &lt; 10,		% Each element of the list must be a digit
+    Col2 is Col * 10 + H,
+    listToNumber(T, Col2, R).
+
+listToNumberMain([H|T], R):-  % Split the list s.t. we get 'fail' for empty list
+    listToNumber([H|T], 0, R).
+
+
+numberToList(0, Col, Col):-
+    !.
+
+numberToList(N, Col, R):-
+    NDiv10 is N div 10,
+    NMod10 is N mod 10,
+    numberToList(NDiv10, [NMod10|Col], R).
+
+numberToListMain(0, [0]):-  % If 0 is given, wee need to return [0], not []
+	!.
+    
+numberToListMain(N, R):-
+    numberToList(N, [], R).
+
+
+
+% New code
+
+successor(L, R):-
+    listToNumberMain(L, N),
+    N1 is N + 1,
+    numberToListMain(N1, R).
+</div>
+
+<div class="nb-cell query" name="q9">
+successor([1, 9, 3, 5, 9, 9], R).
+</div>
+
+<div class="nb-cell query" name="q10">
+successor([8, 9], R).
+</div>
+
+<div class="nb-cell query" name="q11">
+successor([1, 1], R).
+</div>
+
+<div class="nb-cell query" name="q12">
+successor([7], R).
+</div>
+
+<div class="nb-cell query" name="q13">
+successor([9], R).
+</div>
+
+<div class="nb-cell query" name="q14">
+successor([], R).
+</div>
+
+<div class="nb-cell query" name="q16">
+successor([1, 9, 3, 5, 9, 9], [1, 9, 3, 6, 0, 0]).
+</div>
+
+<div class="nb-cell html" name="htm12">
+<p>b. For a heterogeneous list, formed from integer numbers and list of numbers, determine the successor of a
+sublist considered as a number. </p>
+<p> E.g.: [1, [2, 3], 4, 5, [6, 7, 9], 10, 11, [1, 2, 0], 6] --&gt; [1, [2, 4], 4, 5, [6, 8, 0], 10, 11, [1, 2, 1], 6] </p>
+</div>
+
+<div class="nb-cell html" name="htm13">
+<p></p><pre> sublistSuccessors(l<sub>1</sub>, l<sub>2</sub>, ..., l<sub>n</sub>) = { ∅, n = 0 <p></p>
+<p>                                     { successor(l<sub>1</sub>) ∪ sublistSuccessors(l<sub>2</sub>, ..., l<sub>n</sub>), is_list(l<sub>1</sub>) </p>
+<p>                                     { l<sub>1</sub> ∪ sublistSuccessors(l<sub>2</sub>, ..., l<sub>n</sub>), otherwise</p></pre>
+</div>
+
+<div class="nb-cell html" name="htm14">
+<p></p><pre> sublistSuccessors(L: List, R: List) <p></p>
+<p> flow model: sublistSuccessors(i, o); sublistSuccessors(i, i) </p></pre>
+</div>
+
+<div class="nb-cell program" name="p4">
+% Previous code
+
+listToNumber([], Col, Col).
+
+listToNumber([H|T], Col, R):-
+    H &lt; 10,		% Each element of the list must be a digit
+    Col2 is Col * 10 + H,
+    listToNumber(T, Col2, R).
+
+listToNumberMain([H|T], R):-  % Split the list s.t. we get 'fail' for empty list
+    listToNumber([H|T], 0, R).
+
+
+numberToList(0, Col, Col):-
+    !.
+
+numberToList(N, Col, R):-
+    NDiv10 is N div 10,
+    NMod10 is N mod 10,
+    numberToList(NDiv10, [NMod10|Col], R).
+
+numberToListMain(0, [0]):-  % If 0 is given, wee need to return [0], not []
+	!.
+    
+numberToListMain(N, R):-
+    numberToList(N, [], R).
+
+
+successor(L, R):-
+    listToNumberMain(L, N),
+    N1 is N + 1,
+    numberToListMain(N1, R).
+
+
+
+% New code
+
+sublistSuccessors([], []).
+
+sublistSuccessors([H|T], [H2|R]):-
+    is_list(H),
+    !,
+    successor(H, H2),
+    sublistSuccessors(T, R).
+
+sublistSuccessors([H|T], [H|R]):-
+    sublistSuccessors(T, R).
+</div>
+
+<div class="nb-cell query" name="q17">
+sublistSuccessors([1, [2, 3], 4, 5, [6, 7, 9], 10, 11, [1, 2, 0], 6], R).
+</div>
+
+<div class="nb-cell query" name="q19">
+sublistSuccessors([1, 2, 3, 4, 5], R).
+</div>
+
+<div class="nb-cell query" name="q20">
+sublistSuccessors([[9], [1, 0], [1, 9]], R)
+</div>
+
+<div class="nb-cell query" name="q18">
+sublistSuccessors([1, [2, 3], 4, 5, [6, 7, 9], 10, 11, [1, 2, 0], 6], [1, [2, 4], 4, 5, [6, 8, 0], 10, 11, [1, 2, 1], 6]).
+</div>
+
+</div>
